@@ -11,12 +11,12 @@ import { __ } from '@wordpress/i18n';
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
-import { Panel, PanelBody, ToggleControl } from '@wordpress/components';
+import { useBlockProps } from '@wordpress/block-editor';
 import { useSelect } from '@wordpress/data';
 import { store as coreDataStore } from '@wordpress/core-data';
 
 import BookList from './components/BookList';
+import BlockControls from './components/BlockControls';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -36,8 +36,6 @@ import './editor.scss';
  */
 export default function Edit( { attributes, setAttributes } ) {
 
-    const { showContent, showImage } = attributes;
-
     const books = useSelect(
         select =>
             select( coreDataStore ).getEntityRecords( 'postType', 'book' ),
@@ -46,28 +44,7 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	return (
 		<div {...useBlockProps()}>
-
-            <InspectorControls key="setting">
-                <Panel>
-                    <PanelBody title="My Reading List Settings">
-                        <ToggleControl
-                            label="Toggle Image"
-                            checked={ showImage }
-                            onChange={ (newValue) => { 
-                                setAttributes( { showImage: newValue } ); 
-                            } }
-                        />
-                        <ToggleControl
-                            label="Toggle Content"
-                            checked={ showContent }
-                            onChange={ ( newValue ) => { 
-                                setAttributes( { showContent: newValue } ); 
-                            } }
-                        />
-                    </PanelBody>
-                </Panel>
-            </InspectorControls>
-
+            <BlockControls attributes={ attributes } setAttributes={ setAttributes } />
 			<p>{__('My Reading List – hello from the editor!', 'my-reading-list')}</p>
 			<BookList books={ books } attributes={ attributes } />
 		</div>
